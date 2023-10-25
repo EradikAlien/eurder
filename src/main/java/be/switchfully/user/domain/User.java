@@ -1,7 +1,10 @@
-package be.switchfully;
+package be.switchfully.user.domain;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.smallrye.common.annotation.Identifier;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.UUID;
 
@@ -26,16 +29,17 @@ import java.util.UUID;
  * }
  */
 @Entity
-public class Customer {
+@Table(name = "test_user")
+public class User extends PanacheEntityBase {
     @Id
     private String id;
-    public String firstname;
-    public String lastname;
-    public String emailAddress;
-    public String address;
-    public String phoneNumber;
+    private String firstname;
+    private String lastname;
+    private String emailAddress;
+    private String address;
+    private String phoneNumber;
 
-    public Customer(String firstname, String lastname, String emailAddress, String address, String phoneNumber) {
+    public User(String firstname, String lastname, String emailAddress, String address, String phoneNumber) {
         this.id = UUID.randomUUID().toString();
         this.firstname = firstname;
         this.lastname = lastname;
@@ -44,7 +48,7 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer() {
+    public User() {
 
     }
 
@@ -52,4 +56,23 @@ public class Customer {
         return id;
     }
 
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 }

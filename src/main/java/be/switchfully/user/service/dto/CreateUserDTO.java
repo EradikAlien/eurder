@@ -1,6 +1,6 @@
-package be.switchfully;
+package be.switchfully.user.service.dto;
 
-public class CreateCustomerDTO {
+public class CreateUserDTO {
     private String firstname;
     private String lastname;
     private String emailAddress;
