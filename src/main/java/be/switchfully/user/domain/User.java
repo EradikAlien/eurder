@@ -1,59 +1,75 @@
 package be.switchfully.user.domain;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.smallrye.common.annotation.Identifier;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.quarkus.elytron.security.common.BcryptUtil;
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
-
-/**
- * Example JPA entity defined as a Panache Entity.
- * An ID field of Long type is provided, if you want to define your own ID field extends <code>PanacheEntityBase</code> instead.
- * <p>
- * This uses the active record pattern, you can also use the repository pattern instead:
- * .
- * <p>
- * Usage (more example on the documentation)
- * <p>
- * {@code
- * public void doSomething() {
- * MyEntity entity1 = new MyEntity();
- * entity1.field = "field-1";
- * entity1.persist();
- * <p>
- * List<MyEntity> entities = MyEntity.listAll();
- * }
- * }
- */
 @Entity
 @Table(name = "test_user")
-public class User extends PanacheEntityBase {
+@UserDefinition
+public class User {
     @Id
-    private String id;
+    private UUID id;
+    @Roles
+    private String role;
+    @Column
     private String firstname;
+    @Column
     private String lastname;
+    @Username
     private String emailAddress;
-    private String address;
+    @Password
+    private String password;
+    @Embedded
+    private Address address;
+    @Column
     private String phoneNumber;
 
-    public User(String firstname, String lastname, String emailAddress, String address, String phoneNumber) {
-        this.id = UUID.randomUUID().toString();
+    private User(String firstname, String lastname, String emailAddress, String password, Address address, String phoneNumber) {
+        this.id = UUID.randomUUID();
+        this.role = "member";
         this.firstname = firstname;
         this.lastname = lastname;
-        this.emailAddress = emailAddress;
+        if (!isValid(emailAddress)) {
+            throw new IllegalArgumentException(emailAddress + " is not a valid e-mail");
+        } else {
+            this.emailAddress = emailAddress;
+        }
+        this.password = BcryptUtil.bcryptHash(password);
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
-    public User() {
+    public static User createMember(String firstname, String lastname, String emailAddress, String password, Address address, String phoneNumber) {
+        return new User(firstname, lastname, emailAddress, password, address, phoneNumber);
+    }
+
+    private User(String emailAddress, String password) {
+        this.id = UUID.randomUUID();
+        this.emailAddress = emailAddress;
+        this.password = BcryptUtil.bcryptHash(password);
+        this.role = "admin";
+    }
+
+    public static User createAdmin(String emailAddress, String password) {
+        return new User(emailAddress, password);
+    }
+
+    protected User() {
 
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getFirstname() {
@@ -68,11 +84,16 @@ public class User extends PanacheEntityBase {
         return emailAddress;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    static boolean isValid(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 }

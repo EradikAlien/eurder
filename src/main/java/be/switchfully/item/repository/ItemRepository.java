@@ -7,10 +7,4 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 @ApplicationScoped
 public class ItemRepository implements PanacheRepository<Item> {
-    public List<Item> getAll() {
-        return listAll();
-    }
-    public void addItem(Item item) {
-        persist(item);
-    }
 }

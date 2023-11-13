@@ -1,7 +1,7 @@
 package be.switchfully.user.service;
 
-import be.switchfully.user.service.dto.CreateUserDTO;
 import be.switchfully.user.domain.User;
+import be.switchfully.user.service.dto.CreateUserDTO;
 import be.switchfully.user.service.dto.UserDTO;
 
 public class UserMapper {
@@ -17,10 +17,11 @@ public class UserMapper {
     }
 
     public static User mapToEntity(CreateUserDTO createUserDTO) {
-        return new User(createUserDTO.getFirstname(),
-                createUserDTO.getLastname(),
-                createUserDTO.getEmailAddress(),
-                createUserDTO.getAddress(),
-                createUserDTO.getPhoneNumber());
+        return User.createMember(createUserDTO.firstname(),
+                createUserDTO.lastname(),
+                createUserDTO.emailAddress(),
+                createUserDTO.password(),
+                createUserDTO.address(),
+                createUserDTO.phoneNumber());
     }
 }
