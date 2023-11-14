@@ -5,13 +5,13 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public final class Address {
-    @Column
+    @Column(name = "STREET_NAME")
     private String streetName;
-    @Column
+    @Column(name = "STREET_NUMBER")
     private String streetNumber;
-    @Column
+    @Column(name = "CODE")
     private String code;
-    @Column
+    @Column(name = "LABEL")
     private String label;
 
     public Address() {

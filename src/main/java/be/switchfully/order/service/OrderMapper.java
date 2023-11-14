@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
     public static OrderDTO mapToDTO(Order order) {
-        return new OrderDTO(order.getId(), order.getItemGroups().stream().map(ItemGroupMapper::mapToDTO).collect(Collectors.toList()));
+        return new OrderDTO(order.getId(),
+                order.getItemGroups().stream().map(ItemGroupMapper::mapToDTO).collect(Collectors.toList()),
+                order.getOrderTotalPrice());
     }
 }

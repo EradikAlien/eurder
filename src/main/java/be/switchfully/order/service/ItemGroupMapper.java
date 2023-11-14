@@ -8,6 +8,9 @@ import java.util.List;
 
 public class ItemGroupMapper {
     public static ItemGroupDTO mapToDTO(ItemGroup itemGroup) {
-        return new ItemGroupDTO(itemGroup.getId(), ItemMapper.mapToDTO(itemGroup.getItem()), itemGroup.getAmount());
+        return new ItemGroupDTO(itemGroup.getId(),
+                ItemMapper.mapForItemGroupToDTO(itemGroup.getItem()),
+                itemGroup.getAmount(),
+                itemGroup.getTotalPrice());
     }
 }

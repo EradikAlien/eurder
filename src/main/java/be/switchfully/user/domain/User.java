@@ -7,6 +7,7 @@ import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -14,20 +15,24 @@ import java.util.UUID;
 @UserDefinition
 public class User {
     @Id
+    @Column(name = "USER_ID")
     private UUID id;
     @Roles
+    @Column(name = "ROLE")
     private String role;
-    @Column
+    @Column(name = "FIRSTNAME")
     private String firstname;
-    @Column
+    @Column(name = "LASTNAME")
     private String lastname;
     @Username
+    @Column(name = "EMAIL_ADDRESS")
     private String emailAddress;
     @Password
+    @Column(name = "PASSWORD")
     private String password;
     @Embedded
     private Address address;
-    @Column
+    @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
     private User(String firstname, String lastname, String emailAddress, String password, Address address, String phoneNumber) {
@@ -95,5 +100,32 @@ public class User {
     static boolean isValid(String email) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(regex);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", role='" + role + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", password='" + password + '\'' +
+                ", address=" + address +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
     }
 }

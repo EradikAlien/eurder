@@ -10,14 +10,15 @@ import java.util.List;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq")
+    @Column(name = "ITEM_ID")
     private Long id;
-    @Column
+    @Column(name = "NAME")
     public String name;
-    @Column
+    @Column(name = "DESCRIPTION")
     public String description;
-    @Column
+    @Column(name = "PRICE")
     public double price;
-    @Column
+    @Column(name = "STOCK")
     public int stock;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<ItemGroup> itemGroups;
@@ -52,6 +53,10 @@ public class Item {
     }
 
     public int getStock() {
+        return stock;
+    }
+    public int calculateStockLeft(int amountOrdered) {
+        stock -= amountOrdered;
         return stock;
     }
 }

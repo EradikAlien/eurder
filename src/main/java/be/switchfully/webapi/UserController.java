@@ -1,5 +1,6 @@
 package be.switchfully.webapi;
 
+import be.switchfully.customExceptions.NoUserFoundException;
 import be.switchfully.order.service.OrderService;
 import be.switchfully.order.service.dto.CreateOrderDTO;
 import be.switchfully.user.service.UserService;
@@ -9,11 +10,11 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import java.util.UUID;
 
-import static jakarta.ws.rs.core.Response.Status.CREATED;
-import static jakarta.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.*;
 
 @Path("/user")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -58,6 +59,9 @@ public class UserController {
     public Response addOrder(CreateOrderDTO createOrderDTO) {
         return Response.status(CREATED).entity(orderService.addOrder(createOrderDTO)).build();
     }
-
+    @ServerExceptionMapper(NoUserFoundException.class)
+    protected Response noUserFoundException(NoUserFoundException exception) {
+        return Response.status(NOT_FOUND).entity(exception.getMessage()).build();
+    }
 
 }

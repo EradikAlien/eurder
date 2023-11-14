@@ -14,7 +14,7 @@ public class UserRepository implements PanacheRepository<User> {
         return find("emailAddress", emailAddress).firstResultOptional();
     }
 
-    public Optional<User> findByUUIDOptionnal(UUID id) {
+    public Optional<User> findByUUIDOptional(UUID id) {
         return find("id", id).stream().findFirst();
     }
 }
