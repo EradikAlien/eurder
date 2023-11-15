@@ -1,5 +1,6 @@
 package be.switchfully.order.domain;
 
+import be.switchfully.customExceptions.NoItemFoundException;
 import be.switchfully.item.domain.Item;
 import jakarta.persistence.*;
 
@@ -23,12 +24,15 @@ public class ItemGroup {
     private double totalPrice;
 
     public ItemGroup(Item item, int amount) {
-        this.item = item;
-        this.amount = amount;
-        item.stock = item.calculateStockLeft(amount);
-        this.shippingDate = calculateShippingDate(item.getStock(), amount);
-        this.totalPrice = calculateTotalPrice();
+        if (validateItem(item)) {
+            this.item = item;
+            this.amount = amount;
+            item.stock = item.calculateStockLeft(amount);
+            this.shippingDate = calculateShippingDate(item.getStock(), amount);
+            this.totalPrice = calculateTotalPrice();
+        } else throw new NoItemFoundException("No item found");
     }
+
     public ItemGroup(ItemGroup itemGroup) {
         this.item = itemGroup.item;
         this.amount = itemGroup.amount;
@@ -61,13 +65,18 @@ public class ItemGroup {
     }
 
     private LocalDate calculateShippingDate(int itemInStock, int amountOrdered) {
-        if(itemInStock > 0 && (itemInStock - amountOrdered) >= 0) {
+        if (itemInStock > 0 && (itemInStock - amountOrdered) >= 0) {
             return LocalDate.now().plusDays(1);
         } else {
             return LocalDate.now().plusWeeks(1);
         }
     }
-    private double calculateTotalPrice(){
+
+    private double calculateTotalPrice() {
         return item.getPrice() * amount;
+    }
+
+    private boolean validateItem(Item item) {
+        return item != null;
     }
 }
