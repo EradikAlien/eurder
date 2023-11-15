@@ -1,7 +1,6 @@
 package be.switchfully.item.service;
 
 import be.switchfully.customExceptions.NoItemFoundException;
-import be.switchfully.customExceptions.NoUserFoundException;
 import be.switchfully.item.domain.Item;
 import be.switchfully.item.repository.ItemRepository;
 import be.switchfully.item.service.dto.CreateAndUpdateItemDTO;

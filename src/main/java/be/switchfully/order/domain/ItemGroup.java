@@ -10,20 +10,34 @@ import java.time.LocalDate;
 public class ItemGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "itemGroup_seq")
+    @Column(name = "ITEMGROUP_ID")
     private Long id;
+    @Column(name = "AMOUNT")
     private int amount;
+    @Column(name = "SHIPPING_DATE")
     private LocalDate shippingDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", referencedColumnName = "id")
+    @JoinColumn(name = "ITEM_ID", referencedColumnName = "ITEM_ID")
     private Item item;
+    @Column(name = "TOTAL_PRICE")
+    private double totalPrice;
 
     public ItemGroup(Item item, int amount) {
         this.item = item;
         this.amount = amount;
-        this.shippingDate = LocalDate.now().plusDays(1);
+        item.stock = item.calculateStockLeft(amount);
+        this.shippingDate = calculateShippingDate(item.getStock(), amount);
+        this.totalPrice = calculateTotalPrice();
+    }
+    public ItemGroup(ItemGroup itemGroup) {
+        this.item = itemGroup.item;
+        this.amount = itemGroup.amount;
+        item.stock = item.calculateStockLeft(amount);
+        this.shippingDate = calculateShippingDate(item.getStock(), amount);
+        this.totalPrice = calculateTotalPrice();
     }
 
-    public ItemGroup() {
+    protected ItemGroup() {
     }
 
     public Long getId() {
@@ -40,5 +54,20 @@ public class ItemGroup {
 
     public LocalDate getShippingDate() {
         return shippingDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    private LocalDate calculateShippingDate(int itemInStock, int amountOrdered) {
+        if(itemInStock > 0 && (itemInStock - amountOrdered) >= 0) {
+            return LocalDate.now().plusDays(1);
+        } else {
+            return LocalDate.now().plusWeeks(1);
+        }
+    }
+    private double calculateTotalPrice(){
+        return item.getPrice() * amount;
     }
 }

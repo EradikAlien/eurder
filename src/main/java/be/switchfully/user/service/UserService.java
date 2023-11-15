@@ -4,11 +4,8 @@ import be.switchfully.customExceptions.NoUserFoundException;
 import be.switchfully.user.domain.User;
 import be.switchfully.user.repository.UserRepository;
 import be.switchfully.user.service.dto.CreateUserDTO;
-import be.switchfully.order.service.dto.OrderDTO;
 import be.switchfully.user.service.dto.UserDTO;
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -36,7 +33,7 @@ public class UserService {
     }
 
     public UserDTO getUserById(UUID id) {
-        User user = userRepository.findByUUIDOptionnal(id).orElseThrow(() -> new NoUserFoundException("No user found with ID " + id.toString()));
+        User user = userRepository.findByUUIDOptional(id).orElseThrow(() -> new NoUserFoundException("No user found with ID " + id.toString()));
         return UserMapper.mapToDTO(user);
     }
 }

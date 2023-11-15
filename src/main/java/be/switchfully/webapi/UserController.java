@@ -9,11 +9,11 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import java.util.UUID;
 
-import static jakarta.ws.rs.core.Response.Status.CREATED;
-import static jakarta.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.*;
 
 @Path("/user")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -32,12 +32,14 @@ public class UserController {
     public Response getAllUsers() {
         return Response.status(OK).entity(userService.getAllUsers()).build();
     }
+
     @GET
     @Path("/{id}")
     @RolesAllowed("admin")
-    public Response getUserById(@PathParam("id")UUID id) {
+    public Response getUserById(@PathParam("id") UUID id) {
         return Response.status(OK).entity(userService.getUserById(id)).build();
     }
+
     @GET
     @Path("/myOrder")
     @RolesAllowed("member")
@@ -59,5 +61,16 @@ public class UserController {
         return Response.status(CREATED).entity(orderService.addOrder(createOrderDTO)).build();
     }
 
+    @POST
+    @Path("/reorder/{id}")
+    @RolesAllowed("member")
+    public Response addReOrder(@PathParam("id") Long id) {
+        return Response.status(CREATED).entity(orderService.addReOrder(id)).build();
+    }
+
+    @ServerExceptionMapper(NotFoundException.class)
+    protected Response notFoundException(NotFoundException exception) {
+        return Response.status(NOT_FOUND).entity(exception.getMessage()).build();
+    }
 
 }

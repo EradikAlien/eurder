@@ -1,8 +1,9 @@
 package be.switchfully.order.service.dto;
 
-import be.switchfully.order.domain.ItemGroup;
-
 import java.util.List;
 
-public record OrderDTO(Long id, List<ItemGroupDTO> itemGroups) {
+public record OrderDTO(
+        Long OrderId,
+        List<ItemGroupDTO> itemGroups,
+        double orderTotalPrice) {
 }
