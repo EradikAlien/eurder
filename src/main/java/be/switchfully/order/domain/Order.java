@@ -33,7 +33,12 @@ public class Order {
         this.orderTotalPrice = calculateOrderTotalPrice();
     }
 
-    public Order() {
+    protected Order() {
+    }
+
+
+    public User getUser() {
+        return user;
     }
 
     public Long getId() {

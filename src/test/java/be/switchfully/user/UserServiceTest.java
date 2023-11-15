@@ -62,6 +62,6 @@ class UserServiceTest {
 
         Mockito.verify(userRepositoryMock, Mockito.times(1))
                 .persist(USER_ADD);
-        Assertions.assertThat(actualId).isEqualTo(USER_ADD.getId());
+        Assertions.assertThat(actualId).isEqualTo(userAddId);
     }
 }

@@ -17,6 +17,7 @@ public class ItemMapper {
                 item.price,
                 item.stock);
     }
+
     public static ItemForItemGroupDTO mapForItemGroupToDTO(Item item) {
 
         return new ItemForItemGroupDTO(

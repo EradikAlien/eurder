@@ -8,6 +8,7 @@ import java.util.List;
 @Entity
 @SequenceGenerator(name = "item_seq", allocationSize = 1)
 public class Item {
+    public static final int DEFAULT_STOCK = 0;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq")
     @Column(name = "ITEM_ID")
@@ -20,14 +21,15 @@ public class Item {
     public double price;
     @Column(name = "STOCK")
     public int stock;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
-    private List<ItemGroup> itemGroups;
+
 
     private Item(String name, String description, double price, int stock) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.stock = stock;
+        if (validateStock(stock)) {
+            this.stock = stock;
+        } else this.stock = DEFAULT_STOCK;
     }
     public static Item createItem(String name, String description, double price, int stock) {
         return new Item(name, description, price, stock);
@@ -57,6 +59,12 @@ public class Item {
     }
     public int calculateStockLeft(int amountOrdered) {
         stock -= amountOrdered;
-        return stock;
+        if (validateStock(stock)) {
+            return stock;
+        }
+        else return stock = DEFAULT_STOCK;
+    }
+    private boolean validateStock(int desiredStock) {
+        return desiredStock >= DEFAULT_STOCK;
     }
 }

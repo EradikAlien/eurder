@@ -1,7 +1,6 @@
 package be.switchfully.webapi;
 
 import be.switchfully.customExceptions.NoItemFoundException;
-import be.switchfully.customExceptions.NoUserFoundException;
 import be.switchfully.item.service.ItemService;
 import be.switchfully.item.service.dto.CreateAndUpdateItemDTO;
 import jakarta.annotation.security.RolesAllowed;
@@ -37,9 +36,10 @@ public class ItemController {
     @PUT
     @Path("/{id}")
     @RolesAllowed("admin")
-    public Response updateItem(@PathParam("id")Long id, CreateAndUpdateItemDTO updateItemDTO) {
+    public Response updateItem(@PathParam("id") Long id, CreateAndUpdateItemDTO updateItemDTO) {
         return Response.status(CREATED).entity(itemService.updateItem(id, updateItemDTO)).build();
     }
+
     @ServerExceptionMapper(NoItemFoundException.class)
     protected Response noItemFoundException(NoItemFoundException exception) {
         return Response.status(NOT_FOUND).entity(exception.getMessage()).build();

@@ -1,6 +1,5 @@
 package be.switchfully.webapi;
 
-import be.switchfully.customExceptions.NoUserFoundException;
 import be.switchfully.order.service.OrderService;
 import be.switchfully.order.service.dto.CreateOrderDTO;
 import be.switchfully.user.service.UserService;
@@ -33,12 +32,14 @@ public class UserController {
     public Response getAllUsers() {
         return Response.status(OK).entity(userService.getAllUsers()).build();
     }
+
     @GET
     @Path("/{id}")
     @RolesAllowed("admin")
-    public Response getUserById(@PathParam("id")UUID id) {
+    public Response getUserById(@PathParam("id") UUID id) {
         return Response.status(OK).entity(userService.getUserById(id)).build();
     }
+
     @GET
     @Path("/myOrder")
     @RolesAllowed("member")
@@ -59,8 +60,16 @@ public class UserController {
     public Response addOrder(CreateOrderDTO createOrderDTO) {
         return Response.status(CREATED).entity(orderService.addOrder(createOrderDTO)).build();
     }
-    @ServerExceptionMapper(NoUserFoundException.class)
-    protected Response noUserFoundException(NoUserFoundException exception) {
+
+    @POST
+    @Path("/reorder/{id}")
+    @RolesAllowed("member")
+    public Response addReOrder(@PathParam("id") Long id) {
+        return Response.status(CREATED).entity(orderService.addReOrder(id)).build();
+    }
+
+    @ServerExceptionMapper(NotFoundException.class)
+    protected Response notFoundException(NotFoundException exception) {
         return Response.status(NOT_FOUND).entity(exception.getMessage()).build();
     }
 

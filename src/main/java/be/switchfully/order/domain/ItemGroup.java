@@ -25,12 +25,19 @@ public class ItemGroup {
     public ItemGroup(Item item, int amount) {
         this.item = item;
         this.amount = amount;
-        this.shippingDate = calculateShippingDate(item.getStock(), amount);
         item.stock = item.calculateStockLeft(amount);
+        this.shippingDate = calculateShippingDate(item.getStock(), amount);
+        this.totalPrice = calculateTotalPrice();
+    }
+    public ItemGroup(ItemGroup itemGroup) {
+        this.item = itemGroup.item;
+        this.amount = itemGroup.amount;
+        item.stock = item.calculateStockLeft(amount);
+        this.shippingDate = calculateShippingDate(item.getStock(), amount);
         this.totalPrice = calculateTotalPrice();
     }
 
-    public ItemGroup() {
+    protected ItemGroup() {
     }
 
     public Long getId() {
@@ -53,7 +60,7 @@ public class ItemGroup {
         return totalPrice;
     }
 
-    public LocalDate calculateShippingDate(int itemInStock, int amountOrdered) {
+    private LocalDate calculateShippingDate(int itemInStock, int amountOrdered) {
         if(itemInStock > 0 && (itemInStock - amountOrdered) >= 0) {
             return LocalDate.now().plusDays(1);
         } else {
